@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>A Ella Scooter Rent - බුකිං සහ අත්සන සහිත PDF</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            margin: 0;
+            padding: 16px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #1e3c72;
+            border-left: 5px solid #ff9800;
+            padding-left: 12px;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #fff;
+        }
+        .signature-pad-container {
+            border: 2px dashed #aaa;
+            border-radius: 16px;
+            background: #fafafa;
+            margin: 15px 0;
+            position: relative;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            background: white;
+            border-radius: 14px;
+            display: block;
+            touch-action: none;
+        }
+        .sig-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #ff9800;
+            color: #1e3c72;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-warning {
+            background: #dc3545;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .booking-list {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 6px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+        }
+        .delete-booking {
+            background: none;
+            color: #dc3545;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+        .badge {
+            background: #ff9800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: black;
+            font-weight: bold;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            .card, .booking-list { padding: 14px; }
+            button { padding: 8px 14px; }
+        }
+    </style>
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <!-- හෙඩර් -->
+    <div class="card" style="background: linear-gradient(135deg, #1e3c72, #2b4c8a); color: white; text-align: center;">
+        <h1 style="margin:0; font-size: 1.8rem;">🛵 A ELLA SCOOTER RENT</h1>
+        <p>කුලී ගිවිසුම් අත්සන + PDF + WhatsApp</p>
+    </div>
+
+    <!-- නව බුකිං + අත්සන ප්‍රදේශය -->
+    <div class="card">
+        <h2>📝 නව බුකිං සටහන සහ ගිවිසුම</h2>
+        <form id="bookingForm">
+            <label>පාරිභෝගික නම *</label>
+            <input type="text" id="custName" placeholder="උදා: කමල් පෙරේරා" required>
+
+            <label>දුරකථන අංකය (WhatsApp සඳහා) *</label>
+            <input type="tel" id="custPhone" placeholder="071XXXXXXX" required>
+
+            <label>වාහනය තෝරන්න *</label>
+            <select id="vehicle">
+                <option value="Honda PCX ස්කූටර්">🛵 Honda PCX ස්කූටර්</option>
+                <option value="Yamaha NMAX ස්කූටර්">🛵 Yamaha NMAX ස්කූටර්</option>
+                <option value="Mountain බයිසිකල්">🚲 Mountain බයිසිකල්</option>
+                <option value="Electric ස්කූටර්">⚡ Electric ස්කූටර්</option>
+            </select>
+
+            <label>කුලියට ගන්නා දිනය සහ වේලාව *</label>
+            <input type="datetime-local" id="startDateTime" required>
+
+            <label>ආපසු ලබාදෙන දිනය සහ වේලාව *</label>
+            <input type="datetime-local" id="endDateTime" required>
+
+            <label>කුලී මුදල (රු.) *</label>
+            <input type="number" id="rentAmount" placeholder="1500" required>
+
+            <label>අමතර සටහන් (හෙල්මට්, තැන්පතු වගේ)</label>
+            <textarea id="notes" rows="2" placeholder="උදා: හෙල්මට් 2ක්, රු.2000 තැන්පතු"></textarea>
+
+            <label>✍️ පාරිභෝගික අත්සන (තිරය මත ඇඳීමට)</label>
+            <div class="signature-pad-container">
+                <canvas id="signatureCanvas" width="500" height="200" style="width:100%; height:auto; max-width:500px; border:1px solid #ddd;"></canvas>
+            </div>
+            <div class="sig-buttons">
+                <button type="button" id="clearSig" class="btn-secondary">මකන්න</button>
+                <button type="button" id="undoSig" class="btn-secondary">අවලංගු කරන්න</button>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+                <button type="button" id="generatePdfBtn" class="btn-success">📄 PDF ගිවිසුම සාදා බාගත කරන්න</button>
+                <button type="button" id="saveBookingBtn" class="">📌 බුකිං සටහන සුරකින්න</button>
+            </div>
+            <p style="font-size: 0.75rem; color: gray; margin-top: 12px;">PDF එක generate වූ පසු ස්වයංක්‍රීයව බාගත වේ. ඉන්පසු එම PDF එක පාරිභෝගිකයාගේ WhatsApp අංකයට අතින් යවන්න.</p>
+        </form>
+    </div>
+
+    <!-- අද දක්වා බුකිං ලැයිස්තුව -->
+    <div class="booking-list">
+        <h2>📋 අද / පවතින බුකිං සටහන්</h2>
+        <div style="overflow-x: auto;">
+            <table id="bookingsTable">
+                <thead>
+                    <tr><th>නම</th><th>වාහනය</th><th>ගන්නා දිනය</th><th>ආපසු</th><th>ක්‍රියා</th></tr>
+                </thead>
+                <tbody id="bookingsTbody">
+                    <tr><td colspan="5" style="text-align:center;">බුකිං නැත</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <button id="clearAllBookings" class="btn-warning" style="margin-top:12px;">සියලු බුකිං මකන්න</button>
+    </div>
+    <footer>ගිවිසුමේ අත්සන ඇතුළත් වේ. PDF බාගත කර පාරිභෝගිකට WhatsApp කරන්න.</footer>
+</div>
+
+<script>
+    // ---------- Signature Pad initialization ----------
+    const canvas = document.getElementById('signatureCanvas');
+    // set actual canvas dimensions (for resolution)
+    canvas.width = 500;
+    canvas.height = 200;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    let signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(255,255,255)',
+        penColor: 'rgb(0,0,0)',
+        velocityFilterWeight: 0.7,
+        minWidth: 1,
+        maxWidth: 3
+    });
+
+    document.getElementById('clearSig').addEventListener('click', () => {
+        signaturePad.clear();
+    });
+    document.getElementById('undoSig').addEventListener('click', () => {
+        const data = signaturePad.toData();
+        if (data && data.length > 0) {
+            data.pop();
+            signaturePad.fromData(data);
+        }
+    });
+
+    // resize canvas responsiveness (optional)
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext('2d').scale(ratio, ratio);
+        signaturePad.clear(); // reset after resize
+    }
+    window.addEventListener('resize', () => { resizeCanvas(); });
+    resizeCanvas();
+
+    // ---------- Local Storage for bookings ----------
+    let bookings = [];
+
+    function loadBookings() {
+        const stored = localStorage.getItem('ella_scooter_bookings');
+        if(stored) {
+            bookings = JSON.parse(stored);
+        } else {
+            bookings = [];
+        }
+        renderBookingsTable();
+    }
+
+    function saveBookingsToLocal() {
+        localStorage.setItem('ella_scooter_bookings', JSON.stringify(bookings));
+        renderBookingsTable();
+    }
+
+    function renderBookingsTable() {
+        const tbody = document.getElementById('bookingsTbody');
+        if(!bookings.length) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">බුකිං නැත</td></tr>';
+            return;
+        }
+        let html = '';
+        bookings.forEach((b, index) => {
+            html += `<tr>
+                        <td>${escapeHtml(b.custName)}</td>
+                        <td>${escapeHtml(b.vehicle)}</td>
+                        <td>${b.startDate}</td>
+                        <td>${b.endDate}</td>
+                        <td><button class="delete-booking" data-index="${index}">❌ ඉවත්</button></td>
+                     </tr>`;
+        });
+        tbody.innerHTML = html;
+        // attach delete events
+        document.querySelectorAll('.delete-booking').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                bookings.splice(idx, 1);
+                saveBookingsToLocal();
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Add new booking from form (without PDF generation)
+    function addBookingFromForm() {
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const vehicle = document.getElementById('vehicle').value;
+        const start = document.getElementById('startDateTime').value;
+        const end = document.getElementById('endDateTime').value;
+        const amount = document.getElementById('rentAmount').value;
+        const notes = document.getElementById('notes').value;
+
+        if(!name || !phone || !start || !end || !amount) {
+            alert('කරුණාකර අවශ්‍ය සියලු තොරතුරු පුරවන්න (නම, දුරකථන, දින/වේලාව, කුලී මුදල)');
+            return false;
+        }
+        const bookingObj = {
+            id: Date.now(),
+            custName: name,
+            phone: phone,
+            vehicle: vehicle,
+            startDate: start,
+            endDate: end,
+            amount: amount,
+            notes: notes,
+            timestamp: new Date().toISOString()
+        };
+        bookings.unshift(bookingObj);
+        saveBookingsToLocal();
+        return true;
+    }
+
+    document.getElementById('saveBookingBtn').addEventListener('click', () => {
+        if(addBookingFromForm()) {
+            alert('බුකිං සටහන සුරකින ලදී! (PDF ගිවිසුම සඳහා වෙනම බොත්තම ඔබන්න)');
+            // optionally clear some fields? keep name/phone etc for next booking
+        }
+    });
+
+    document.getElementById('clearAllBookings').addEventListener('click', () => {
+        if(confirm('සියලු බුකිං සටහන් ස්ථිරවම මකන්නද?')) {
+            bookings = [];
+            saveBookingsToLocal();
+        }
+    });
+
+    // ---------- PDF GENERATION with signature and agreement ----------
+    async function generateAgreementPDF() {
+        // get current form data
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const vehicle = document.getElementById('vehicle').value;
+        const start = document.getElementById('startDateTime').value;
+        const end = document.getElementById('endDateTime').value;
+        const amount = document.getElementById('rentAmount').value;
+        const notes = document.getElementById('notes').value || "නැත";
+
+        if(!name || !phone || !start || !end || !amount) {
+            alert('PDF එක සෑදීමට පෙර සියලු තොරතුරු පුරවන්න (නම, දුරකථන, දින, කුලී මුදල)');
+            return;
+        }
+
+        if(signaturePad.isEmpty()) {
+            alert('කරුණාකර අත්සන ඇඳීමට! පාරිභෝගිකයා අත්සන් කළ යුතුයි.');
+            return;
+        }
+
+        // get signature as image dataURL
+        const signatureDataURL = signaturePad.toDataURL('image/png');
+
+        // create a hidden div for agreement content (to be captured by html2canvas)
+        const agreementDiv = document.createElement('div');
+        agreementDiv.style.position = 'absolute';
+        agreementDiv.style.left = '-9999px';
+        agreementDiv.style.top = '-9999px';
+        agreementDiv.style.width = '700px';
+        agreementDiv.style.backgroundColor = 'white';
+        agreementDiv.style.padding = '30px';
+        agreementDiv.style.fontFamily = 'system-ui, "Segoe UI", sans-serif';
+        agreementDiv.style.fontSize = '14px';
+        agreementDiv.style.color = 'black';
+        agreementDiv.style.border = '1px solid #ccc';
+        agreementDiv.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+        
+        // format dates nicely
+        const startF = start ? new Date(start).toLocaleString('si-LK') : start;
+        const endF = end ? new Date(end).toLocaleString('si-LK') : end;
+        const today = new Date().toLocaleDateString('si-LK');
+        
+        agreementDiv.innerHTML = `
+            <div style="text-align:center; border-bottom:2px solid #ff9800; margin-bottom:20px;">
+                <h2 style="margin:0;">🛵 A ELLA SCOOTER RENT</h2>
+                <p>කුලී ගිවිසුම (Rental Agreement)</p>
+            </div>
+            <p><strong>ගිවිසුම් අංකය:</strong> ${Date.now()}</p>
+            <p><strong>දිනය:</strong> ${today}</p>
+            <hr/>
+            <h3>1. පාරිභෝගික විස්තර</h3>
+            <p><strong>නම:</strong> ${escapeHtml(name)}</p>
+            <p><strong>දුරකථන (WhatsApp):</strong> ${escapeHtml(phone)}</p>
+            <h3>2. කුලී වාහනය</h3>
+            <p><strong>වාහනය:</strong> ${escapeHtml(vehicle)}</p>
+            <p><strong>කුලියට ගන්නා දින/වේලාව:</strong> ${startF}</p>
+            <p><strong>ආපසු ලබාදෙන දින/වේලාව:</strong> ${endF}</p>
+            <p><strong>සම්පූර්ණ කුලී මුදල (රු.):</strong> ${parseFloat(amount).toFixed(2)}</p>
+            <h3>3. කොන්දේසි</h3>
+            <ul>
+                <li>නියමිත වේලාවට වාහනය ආපසු ලබාදිය යුතුය.</li>
+                <li>ප්‍රමාදයක් සිදුවුවහොත් අමතර ගාස්තු අය කෙරේ.</li>
+                <li>වාහනයට හානි සිදුවුවහොත් අළුත්වැඩියා වියදම් පාරිභෝගිකයා විසින් දැරිය යුතුය.</li>
+                <li>හෙල්මට් පැළඳීම අනිවාර්යයෙන්ම අවශ්‍ය වේ.</li>
+            </ul>
+            <p><strong>අමතර සටහන්:</strong> ${escapeHtml(notes)}</p>
+            <hr/>
+            <div style="margin-top: 40px;">
+                <p><strong>පාරිභෝගික අත්සන:</strong></p>
+                <div style="border:1px solid #aaa; padding:10px; width:300px; margin-top:8px;">
+                    <img src="${signatureDataURL}" style="max-width:100%; height:auto;" alt="signature"/>
+                </div>
+                <p style="margin-top:30px;"><em>(මෙම ගිවිසුම ඉලෙක්ට්‍රොනිකව අත්සන් කර ඇති අතර නීත්‍යානුකූල වේ)</em></p>
+                <p>__________________________________<br>ආයතනයේ මුද්දරය/අත්සන</p>
+            </div>
+            <div style="font-size:10px; text-align:center; margin-top:40px; color:gray;">
+                A Ella Scooter Rent - Ella, Sri Lanka
+            </div>
+        `;
+
+        document.body.appendChild(agreementDiv);
+
+        try {
+            // Use html2canvas to capture the agreement div
+            const canvasImg = await html2canvas(agreementDiv, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false
+            });
+            const imgData = canvasImg.toDataURL('image/png');
+            
+            // Create PDF using jspdf (landscape or portrait)
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297;
+            const imgHeight = (canvasImg.height * imgWidth) / canvasImg.width;
+            let position = 0;
+            
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            // if content exceeds one page, add more pages (simple approach)
+            if (imgHeight > pageHeight) {
+                let remaining = imgHeight - pageHeight;
+                let yOffset = -pageHeight;
+                while (remaining > 0) {
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, yOffset, imgWidth, imgHeight);
+                    yOffset -= pageHeight;
+                    remaining -= pageHeight;
+                }
+            }
+            
+            // save pdf
+            pdf.save(`Rental_Agreement_${name.replace(/\s/g,'_')}.pdf`);
+            alert('PDF ගිවිසුම සාර්ථකව බාගත විය! කරුණාකර මෙම PDF එක පාරිභෝගිකයාගේ WhatsApp අංකයට යවන්න.');
+            
+        } catch(err) {
+            console.error(err);
+            alert('PDF සෑදීමේ දෝෂයක්: ' + err.message);
+        } finally {
+            document.body.removeChild(agreementDiv);
+        }
+    }
+
+    document.getElementById('generatePdfBtn').addEventListener('click', generateAgreementPDF);
+
+    // optional: auto populate example or keep blank
+    loadBookings();
+
+    // Helper: on load set default datetime values (next hour)
+    function setDefaultDateTime() {
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        const startInput = document.getElementById('startDateTime');
+        if(startInput && !startInput.value) {
+            startInput.value = now.toISOString().slice(0, 16);
+        }
+        const later = new Date(now);
+        later.setDate(later.getDate() + 1);
+        const endInput = document.getElementById('endDateTime');
+        if(endInput && !endInput.value) {
+            endInput.value = later.toISOString().slice(0, 16);
+        }
+    }
+    setDefaultDateTime();
+</script>
+</body>
+</html>
